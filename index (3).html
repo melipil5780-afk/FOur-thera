@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a2332">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SAFE">
+  <meta name="description" content="A 20-week anxiety curriculum. See · Accept · Free · Engage.">
+  <link rel="manifest" href="manifest.json">
+  <title>SAFE — Anxiety Curriculum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <div class="status-bar-spacer"></div>
+    <header id="top-bar">
+      <button id="btn-back" class="btn-icon hidden" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+      </button>
+      <div id="top-title">SAFE</div>
+      <button id="btn-info-open" class="btn-icon" aria-label="About">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+      </button>
+    </header>
+    <main id="screen-root"></main>
+    <nav id="bottom-nav">
+      <button class="nav-btn active" data-screen="today">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+        <span class="nav-label">Today</span>
+      </button>
+      <button class="nav-btn" data-screen="map">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></span>
+        <span class="nav-label">Map</span>
+      </button>
+      <button class="nav-btn sos-nav" data-screen="sos">
+        <span class="nav-icon sos-pulse"><svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></span>
+        <span class="nav-label">SOS</span>
+      </button>
+      <button class="nav-btn" data-screen="journey">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+        <span class="nav-label">Journey</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Weekly popup -->
+  <div id="modal-weekly" class="modal-overlay hidden">
+    <div class="modal-card popup-card">
+      <div class="popup-stripe" id="popup-stripe"></div>
+      <div class="ws-icon-wrap"><div class="ws-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="28" height="28">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+      </div></div>
+      <p class="popup-week-label" id="popup-week-label"></p>
+      <h2 class="popup-title" id="popup-title"></h2>
+      <p class="popup-subtitle" id="popup-subtitle"></p>
+      <div class="popup-meta">
+        <span class="popup-day-badge" id="popup-day-badge"></span>
+        <span class="popup-time">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          10–12 min
+        </span>
+      </div>
+      <div class="popup-actions">
+        <button class="btn-primary" id="btn-popup-start">Open Worksheet</button>
+        <button class="btn-ghost" id="btn-popup-later">Later</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Readiness check -->
+  <div id="modal-readiness" class="modal-overlay hidden">
+    <div class="modal-card readiness-card">
+      <div class="readiness-glyph">✦</div>
+      <h2 id="readiness-title"></h2>
+      <p id="readiness-body"></p>
+      <div class="readiness-actions">
+        <button class="btn-primary" id="btn-ready-yes">Yes — I used it</button>
+        <button class="btn-secondary" id="btn-ready-proceed">Move on anyway</button>
+        <button class="btn-ghost" id="btn-ready-repeat">Give me another week</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Celebration -->
+  <div id="modal-celebrate" class="modal-overlay hidden">
+    <div class="modal-card celebrate-card">
+      <div class="celebrate-icon" id="celebrate-icon"></div>
+      <h2 id="celebrate-title"></h2>
+      <p id="celebrate-body"></p>
+      <button class="btn-primary" id="btn-celebrate-ok">Continue</button>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div id="modal-info" class="modal-overlay hidden">
+    <div class="modal-card info-card">
+      <h3>About SAFE</h3>
+      <div id="info-body">
+        <p>SAFE is a 20-week between-session anxiety curriculum integrating CBT, ACT, EFT, somatic regulation, and self-compassion:</p>
+        <div class="info-phases">
+          <div class="info-phase see"><strong>SEE</strong> Weeks 1–3 · Awareness &amp; Mapping</div>
+          <div class="info-phase accept"><strong>ACCEPT</strong> Weeks 4–8 · Defusion &amp; Willingness</div>
+          <div class="info-phase free"><strong>FREE</strong> Weeks 9–15 · Restructuring &amp; Regulation</div>
+          <div class="info-phase engage"><strong>ENGAGE</strong> Weeks 16–20 · Values &amp; Action</div>
+        </div>
+        <p style="margin-top:16px;font-size:13px;opacity:0.6;line-height:1.6">This app does not replace therapy. If you are experiencing severe anxiety, please work with a licensed mental health professional.</p>
+      </div>
+      <button class="btn-ghost" id="btn-info-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Script load order is critical -->
+  <script src="data.js"></script>
+  <script src="audio.js"></script>
+  <script src="responses.js"></script>
+  <script src="player.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+    }
+  </script>
+</body>
+</html>
